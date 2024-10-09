@@ -16,7 +16,8 @@ jobs:
 
       - name: Run the application
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }} 
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          PORT: ${{ secrets.PORT }}
         run: cd server && npm run dev 
 
       - name: Check the deployed service URL
