@@ -37,18 +37,19 @@ jobs:
           title: Build failed
           username: GitHub PR Notifier
           message: Build failed
-
-  tag_release:
-    needs: [simple_deployment_pipeline]
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: '0' 
-      - name: Bump version and push tag
-        if: ${{ env.SKIP_DEPLOY == 'false' }}
-        uses: anothrNick/github-tag-action@1.64.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
+    
+      
+    tag_release:
+      needs: [frontend_deployment_pipeline]
+      runs-on: ubuntu-20.04
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: '0' 
+        - name: Bump version and push tag
+          if: ${{ env.SKIP_DEPLOY == 'false' }}
+          uses: anothrNick/github-tag-action@1.64.0
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            DEFAULT_BUMP: patch
