@@ -34,9 +34,9 @@ beforeEach(async () => {
   })
 })
 
-test('there are two blogs', async () => {
+test('there is one blog', async () => {
   const response = await api.get('/api/blogs')
-  assert.strictEqual(response.body.length, 2)
+  assert.strictEqual(response.body.length, 1)
 })
 
 test('returned blogs have an id field instead of _id', async () => {
