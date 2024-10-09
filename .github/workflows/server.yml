@@ -1,4 +1,4 @@
-name: Deployment pipeline
+name: Backend deployment pipeline
 
 on:
   [push]
@@ -7,7 +7,7 @@ env:
   SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
 
 jobs:
-  simple_deployment_pipeline:
+  backend_deployment_pipeline:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,9 @@ jobs:
       - name: Lint code
         run: cd server && npm run lint
 
-      - name: Run unit tests
+      - name: Run tests
+        env:
+          MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }} 
         run: cd server && npm run test
       
       - name: Run build
@@ -34,6 +36,7 @@ jobs:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Build failed
           username: GitHub PR Notifier
+          message: Build failed
 
   tag_release:
     needs: [simple_deployment_pipeline]

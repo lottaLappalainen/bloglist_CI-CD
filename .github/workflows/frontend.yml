@@ -1,4 +1,4 @@
-name: Deployment pipeline
+name: Frontend deployment pipeline
 
 on:
   [push]
@@ -7,7 +7,7 @@ env:
   SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
 
 jobs:
-  simple_deployment_pipeline:
+  frontend_deployment_pipeline:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -21,8 +21,8 @@ jobs:
       - name: Lint code
         run: cd frontend && npm run lint
 
-      - name: Run unit tests
-        run: cd frontend && npm run test
+      - name: Run tests
+        run: cd server && npm run test
       
       - name: Run build
         run: cd frontend && npm run build
@@ -34,6 +34,8 @@ jobs:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           title: Build failed
           username: GitHub PR Notifier
+          message: 'Build failed'
+
 
   tag_release:
     needs: [simple_deployment_pipeline]
