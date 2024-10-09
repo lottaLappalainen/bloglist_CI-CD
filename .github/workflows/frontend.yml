@@ -1,0 +1,51 @@
+name: Deployment pipeline
+
+on:
+  [push]
+
+env:
+  SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
+
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd frontend && npm install
+
+      - name: Lint code
+        run: cd frontend && npm run lint
+
+      - name: Run unit tests
+        run: cd frontend && npm run test
+      
+      - name: Run build
+        run: cd frontend && npm run build
+
+      - name: Notify build failure
+        uses: stegzilla/discord-notify@v4
+        if: failure()
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Build failed
+          username: GitHub PR Notifier
+
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0' 
+      - name: Bump version and push tag
+        if: ${{ env.SKIP_DEPLOY == 'false' }}
+        uses: anothrNick/github-tag-action@1.64.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
