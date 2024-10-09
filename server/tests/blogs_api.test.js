@@ -34,9 +34,9 @@ beforeEach(async () => {
   })
 })
 
-test('there is one blog', async () => {
+test('there is two blogs', async () => {
   const response = await api.get('/api/blogs')
-  assert.strictEqual(response.body.length, 1)
+  assert.strictEqual(response.body.length, 2)
 })
 
 test('returned blogs have an id field instead of _id', async () => {
@@ -132,7 +132,7 @@ test('deletes a blog with status code 204 if id is valid', async () => {
 
 test('updates a blog correctly', async () => {
   const blogsAtStart = await helper.blogsInDb()
-  const blogToUpdate = blogsAtStart[1]
+  const blogToUpdate = blogsAtStart[0]
 
   const updatedBlog = {
     title: 'Canonical string reduction',
