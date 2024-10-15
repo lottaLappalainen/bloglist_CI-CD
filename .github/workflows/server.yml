@@ -4,7 +4,7 @@ on:
   [push]
 
 env:
-  SKIP_TAG: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
+  SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
 
 jobs:
   backend_deployment_pipeline:
@@ -41,6 +41,19 @@ jobs:
           title: Build failed
           username: GitHub PR Notifier
           message: Build failed
+
+      - name: Trigger deployment
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && env.SKIP_DEPLOY == 'false' }}
+        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+
+      - name: Notify deployment success
+        uses: stegzilla/discord-notify@v4
+        if: success()
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          title: A new version of deployed!
+          message: 'to https://bloglist-ci-cd-23i4.onrender.com/'
+          username: GitHub PR Notifier
     
   tag_release:
     needs: backend_deployment_pipeline 
@@ -51,7 +64,7 @@ jobs:
         with:
           fetch-depth: '0' 
       - name: Bump version and push tag
-        if: ${{ env.SKIP_TAG == 'false' }}
+        if: ${{ env.SKIP_DEPLOY == 'false' }}
         uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
