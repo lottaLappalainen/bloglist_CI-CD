@@ -4,7 +4,7 @@ on:
   [push]
 
 env:
-  SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
+  SKIP_TAG: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
 
 jobs:
   backend_deployment_pipeline:
@@ -51,7 +51,7 @@ jobs:
         with:
           fetch-depth: '0' 
       - name: Bump version and push tag
-        if: ${{ env.SKIP_DEPLOY == 'false' }}
+        if: ${{ env.SKIP_TAG == 'false' }}
         uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

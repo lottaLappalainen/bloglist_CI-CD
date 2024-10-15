@@ -5,6 +5,6 @@ echo "Running build script..."
 cd frontend
 npm install
 
-cd ../backend
+cd ../server
 npm install
 npm run build:ui
