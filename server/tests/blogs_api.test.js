@@ -36,6 +36,7 @@ beforeEach(async () => {
 
 test('there is two blogs', async () => {
   const response = await api.get('/api/blogs')
+  console.log('response', response.body)
   assert.strictEqual(response.body.length, 2)
 })
 
@@ -117,6 +118,7 @@ test('blog without title cannot be added', async () => {
 test('deletes a blog with status code 204 if id is valid', async () => {
   const blogsAtStart = await helper.blogsInDb()
   const blogToDelete = blogsAtStart[0]
+  console.log('blogs delete', blogsAtStart)
 
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
@@ -132,7 +134,8 @@ test('deletes a blog with status code 204 if id is valid', async () => {
 
 test('updates a blog correctly', async () => {
   const blogsAtStart = await helper.blogsInDb()
-  const blogToUpdate = blogsAtStart[0]
+  const blogToUpdate = blogsAtStart[1]
+  console.log('blogs update', blogsAtStart)
 
   const updatedBlog = {
     title: 'Canonical string reduction',
