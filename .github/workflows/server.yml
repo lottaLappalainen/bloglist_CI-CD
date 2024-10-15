@@ -1,7 +1,12 @@
 name: Backend deployment pipeline
 
 on:
-  [push]
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
 env:
   SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
@@ -61,6 +66,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: '0' 
       - name: Bump version and push tag
         if: ${{ env.SKIP_DEPLOY == 'false' }}
         uses: anothrNick/github-tag-action@1.64.0
