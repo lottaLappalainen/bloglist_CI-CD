@@ -11,19 +11,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: cd server && npm install
-
-      - name: Run the application
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          PORT: ${{ secrets.PORT }}
-        run: cd server && npm run dev 
-
       - name: Check the deployed service URL
         uses: jtalk/url-health-check-action@v4
         with:
-          url: http://localhost:3003/health
+          url: https://bloglist-ci-cd-23i4.onrender.com/health
           follow-redirect: false
           max-attempts: 3
           retry-delay: 5s
