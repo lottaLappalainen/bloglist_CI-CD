@@ -1,8 +1,9 @@
 name: Scheduled Health Check
 
 on:
-  [push]
-
+  schedule:
+  - cron: '0 0 * * *'
+  
 jobs:
   health_check:
     runs-on: ubuntu-latest
