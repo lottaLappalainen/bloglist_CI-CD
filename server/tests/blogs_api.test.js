@@ -35,6 +35,7 @@ beforeEach(async () => {
 })
 
 test('there is two blogs', async () => {
+  await new Promise(resolve => setTimeout(resolve, 5000))
   const response = await api.get('/api/blogs')
   console.log('response', response.body)
   assert.strictEqual(response.body.length, 2)
@@ -116,6 +117,7 @@ test('blog without title cannot be added', async () => {
 })
 
 test('deletes a blog with status code 204 if id is valid', async () => {
+  await new Promise(resolve => setTimeout(resolve, 5000))
   const blogsAtStart = await helper.blogsInDb()
   const blogToDelete = blogsAtStart[0]
   console.log('blogs delete', blogsAtStart)
@@ -133,6 +135,7 @@ test('deletes a blog with status code 204 if id is valid', async () => {
 })
 
 test('updates a blog correctly', async () => {
+  await new Promise(resolve => setTimeout(resolve, 5000))
   const blogsAtStart = await helper.blogsInDb()
   const blogToUpdate = blogsAtStart[1]
   console.log('blogs update', blogsAtStart)

@@ -26,6 +26,9 @@ jobs:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }} 
           SECRET: ${{ secrets.SECRET }}
         run: cd server && npm run test
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm install
       
       - name: Run build
         run: cd server && npm run build:ui
