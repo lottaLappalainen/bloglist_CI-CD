@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd ../server
+cd server
 npm start
