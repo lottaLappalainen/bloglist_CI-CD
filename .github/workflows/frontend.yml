@@ -1,7 +1,12 @@
 name: Frontend deployment pipeline
 
 on:
-  [push]
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
 env:
   SKIP_DEPLOY: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
